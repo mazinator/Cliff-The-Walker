@@ -13,3 +13,5 @@ Cliff Walking Example from Book "Reinforcement Learning: Introduction" by Sutton
 The results are coherent with the original book.
 QLearning leads to a rather aggressive strategy directly on the cliff's edge, while Sarsa keeps a rows distance to the cliff. 
 Perfect strategy for Q-Learning if epsilon decayed to 0.
+
+check out the parameter print_field in learn() to visualize the cliff-field in the console.
