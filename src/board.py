@@ -1,5 +1,5 @@
 import numpy as np
-import tkinter as tk
+from typing import List, Tuple
 import os
 
 """
@@ -52,6 +52,9 @@ class CliffBoard():
     def get_state(self):
         return tuple(self.agent_pos)
 
+    def is_terminal(self) -> bool:
+        return self.agent_pos == [self.rows - 1, self.cols - 1]
+
     def print_board(self):
         os.system('clear')  # Clear the console first
         for r in range(self.rows):
@@ -66,15 +69,15 @@ class CliffBoard():
                     print('-', end=' ')  # cliff
             print()  # Move to the next line after printing each row
 
-    def make_move(self, move: str):
+    def make_action(self, move: str) -> int:
         """
         Makes a move on the board, returns .
 
         @:param
-        move: UP, DOWN, LEFT, RIGHT (1 to 4)
+        move: UP, DOWN, LEFT, RIGHT
 
         @:returns
-        board-state, reward, finished
+        board-state, reward
         """
 
         # check if valid move
@@ -87,26 +90,31 @@ class CliffBoard():
 
         # check if move results in bumping to a wall
         if new_row < 0 or new_row >= self.rows or new_col < 0 or new_col >= self.cols:
-            return self.get_state(), -1, False
+            return -1
+
+        # check if new position is a cliff
+        # if yes, put agent to the beginning and make reward -100
+        if self.board[new_row, new_col] == 3:
+            self.board[self.agent_pos[0], self.agent_pos[1]] = 0
+            self.agent_pos = [self.rows - 1, 0]
+            self.board[self.agent_pos[0], self.agent_pos[1]] = 1
+            return -100
+
+        # check if game completed
+        # if yes, return reward 10 and mark game as finished
+        if self.board[new_row, new_col] == 2:
+            self.board[self.agent_pos[0], self.agent_pos[1]] = 0
+            self.agent_pos = [new_row, new_col]
+            self.board[self.agent_pos[0], self.agent_pos[1]] = 1
+            return 10
 
         # reset agents position on board
         self.board[self.agent_pos[0], self.agent_pos[1]] = 0
         self.agent_pos = [new_row, new_col]
         self.board[self.agent_pos[0], self.agent_pos[1]] = 1
 
-        # check if new position is a cliff
-        # if yes, put agent to the beginning and make reward -100
-        if self.board[new_row, new_col] == 3:
-            self.agent_pos = [self.rows - 1, 0]
-            return self.get_state(), -100, False
-
-        # check if game completed
-        # if yes, return reward 10 and mark game as finished
-        if self.board[new_row, new_col] == 2:
-            return self.get_state(), 10, True
-
         # otherwise, return reward -1
-        return self.get_state(), -1, False
+        return -1
 
 
 
