@@ -55,18 +55,19 @@ class CliffBoard():
     def is_terminal(self) -> bool:
         return self.agent_pos == [self.rows - 1, self.cols - 1]
 
-    def print_board(self):
+    def print_board(self, text=""):
         os.system('clear')  # Clear the console first
+        print(text)
         for r in range(self.rows):
             for c in range(self.cols):
                 if self.board[r, c] == 0:
-                    print('*', end=' ')
+                    print('-', end=' ')
                 elif self.board[r, c] == 1:
-                    print('x', end=' ')  # start position
+                    print('A', end=' ')  # start position
                 elif self.board[r, c] == 2:
                     print('t', end=' ')  # target position
                 elif self.board[r, c] == 3:
-                    print('-', end=' ')  # cliff
+                    print('*', end=' ')  # cliff
             print()  # Move to the next line after printing each row
 
     def make_action(self, move: str) -> int:
@@ -77,7 +78,7 @@ class CliffBoard():
         move: UP, DOWN, LEFT, RIGHT
 
         @:returns
-        board-state, reward
+        reward
         """
 
         # check if valid move

@@ -1,8 +1,7 @@
 import time
 
 import numpy as np
-from typing import List
-from src.board import CliffBoard
+from src.environment.board import CliffBoard
 
 
 # very stupid baseline - always random moves, no learning
